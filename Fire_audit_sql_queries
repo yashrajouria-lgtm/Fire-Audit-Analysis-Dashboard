@@ -1,0 +1,87 @@
+--View 1 — Monthly Plan vs Actual vs Pending
+CREATE VIEW vw_monthly_plan AS
+SELECT
+    TO_CHAR("Audit_Plan_Date", 'Mon-YY') AS plan_month,
+    MIN("Audit_Plan_Date") AS month_sort,
+    COUNT(*) AS total_planned,
+    SUM(CASE WHEN "Status" = 'Completed' THEN 1 ELSE 0 END) AS audited,
+    SUM(CASE WHEN "Status" = 'Pending' THEN 1 ELSE 0 END) AS pending
+FROM fire_audit
+GROUP BY TO_CHAR("Audit_Plan_Date", 'Mon-YY')
+ORDER BY MIN("Audit_Plan_Date");
+
+-- View 2 — Cumulative Plan vs YTD Audited
+
+CREATE VIEW vw_cumulative AS
+SELECT
+    plan_month,
+    month_sort,
+    total_planned,
+    audited,
+    SUM(total_planned) OVER (ORDER BY month_sort) AS cumulative_plan,
+    SUM(audited) OVER (ORDER BY month_sort) AS ytd_audited,
+    SUM(total_planned) OVER (ORDER BY month_sort) - 
+    SUM(audited) OVER (ORDER BY month_sort) AS gap
+FROM vw_monthly_plan;
+
+--View 3 — Risk Category Breakdown
+CREATE VIEW vw_risk_category AS
+SELECT
+    "Risk_Category",
+    COUNT(*) AS count
+FROM fire_audit
+WHERE "Status" = 'Completed'
+GROUP BY "Risk_Category";
+
+--View 4 — Supplier Detail Table
+CREATE VIEW vw_supplier_detail AS
+SELECT
+    "Supplier_Code",
+    "Supplier_Name",
+    "Financial_Year",
+    "Plan_Month",
+    "Actual_Month",
+    "Score_Percent",
+    "Risk_Category",
+    "Days_Taken",
+    "Status"
+FROM fire_audit
+ORDER BY "Audit_Plan_Date";
+
+--add a 5th view for the KPI cards at the top of the dashboard:
+CREATE VIEW vw_kpi_summary AS
+SELECT
+    COUNT(*) AS total_planned,
+    SUM(CASE WHEN "Status" = 'Completed' THEN 1 ELSE 0 END) AS total_audited,
+    SUM(CASE WHEN "Status" = 'Pending' THEN 1 ELSE 0 END) AS total_pending,
+    ROUND(AVG("Score_Percent")::numeric, 1) AS avg_score,
+    ROUND(
+        SUM(CASE WHEN "Status" = 'Completed' THEN 1 ELSE 0 END)::numeric 
+        / COUNT(*) * 100, 1
+    ) AS completion_rate
+FROM fire_audit;
+
+-- month sort query
+
+DROP VIEW vw_cumulative;
+DROP VIEW vw_monthly_plan;
+
+CREATE VIEW vw_monthly_plan AS
+SELECT
+    TO_CHAR("Audit_Plan_Date", 'YYYY-MM') AS plan_month,
+    COUNT(*) AS total_planned,
+    SUM(CASE WHEN "Status" = 'Completed' THEN 1 ELSE 0 END) AS audited,
+    SUM(CASE WHEN "Status" = 'Pending' THEN 1 ELSE 0 END) AS pending
+FROM fire_audit
+GROUP BY TO_CHAR("Audit_Plan_Date", 'YYYY-MM');
+
+CREATE VIEW vw_cumulative AS
+SELECT
+    plan_month,
+    total_planned,
+    audited,
+    SUM(total_planned) OVER (ORDER BY plan_month) AS cumulative_plan,
+    SUM(audited) OVER (ORDER BY plan_month) AS ytd_audited,
+    SUM(total_planned) OVER (ORDER BY plan_month) -
+    SUM(audited) OVER (ORDER BY plan_month) AS gap
+FROM vw_monthly_plan;

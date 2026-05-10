@@ -1,3 +1,5 @@
+<div align="center">
+
 # 🔥 Fire Audit Analysis Dashboard
 
 ### *Turning supplier audit chaos into actionable insights*
@@ -63,11 +65,6 @@
 ---
 
 ## 🛠️ Built With
-┌─────────────────────────────────────────────┐
-│  Excel → Python → PostgreSQL → Power BI    │
-│                                             │
-│  Raw Data    Cleaning      Storage    Viz  │
-└─────────────────────────────────────────────┘
 
 - **🐼 Pandas + NumPy** — Data wrangling
 - **📊 Matplotlib + Seaborn** — Exploratory analysis  
@@ -78,51 +75,56 @@
 ---
 
 ## ⚡ Project Architecture
-📂 Fire-Audit-Analysis-Dashboard
+Fire-Audit-Analysis-Dashboard
 │
-├── 📓 fire_audit_jupyter.ipynb      Data cleaning + EDA
-├── 📊 Fire_Audit_Dashboard.pbix     Interactive dashboard
-├── 📋 Fire_Audit_Plan_Excel.xlsx    Raw audit data
-├── 🗃️ fire_audit_clean.csv          Processed dataset
+├── fire_audit_jupyter.ipynb      ← Data cleaning + EDA
+├── Fire_Audit_Dashboard.pbix     ← Interactive dashboard
+├── Fire_Audit_Plan_Excel.xlsx    ← Raw audit data
+├── fire_audit_clean.csv          ← Processed dataset
 │
-├── 📁 sql/
-│   └── fire_audit_views.sql         5 PostgreSQL views
+├── sql/
+│   └── fire_audit_views.sql      ← 5 PostgreSQL views
 │
-└── 📁 charts/
-└── *.png                        7 EDA visualizations
+└── charts/
+└── *.png                     ← 7 EDA visualizations
 
 ---
 
 ## 🚀 Quick Start
 
-**1. Clone**
+**1. Clone the repository**
 ```bash
 git clone https://github.com/yashrajouria-lgtm/Fire-Audit-Analysis-Dashboard.git
+cd Fire-Audit-Analysis-Dashboard
 ```
 
-**2. Install**
+**2. Install dependencies**
 ```bash
 pip install pandas numpy matplotlib seaborn sqlalchemy psycopg2-binary openpyxl
 ```
 
-**3. Run**
+**3. Run the notebook**
 ```bash
 jupyter notebook fire_audit_jupyter.ipynb
 ```
 
-**4. Load SQL views**
+**4. Load SQL views into PostgreSQL**
 ```bash
 psql -U postgres -d fire_audit_db -f sql/fire_audit_views.sql
 ```
 
-**5. Open** `Fire_Audit_Dashboard.pbix` in Power BI Desktop
+**5. Open** `Fire_Audit_Dashboard.pbix` in Power BI Desktop and connect to your PostgreSQL database.
 
 ---
 
 ## 📊 Dashboard Features
-✓ 3 Interactive Slicers      ✓ Risk Category Donut
-✓ 4 Dynamic KPI Cards        ✓ Cumulative Plan Tracker
-✓ Monthly Plan vs Actual     ✓ Full Supplier Detail Table
+
+- ✅ 3 Interactive Slicers (Financial Year, Supplier, Risk Category)
+- ✅ 4 Dynamic KPI Cards (Total Planned, Audited, Pending, Completion Rate)
+- ✅ Monthly Plan vs Actual vs Pending chart
+- ✅ Cumulative Plan vs YTD Audited tracker
+- ✅ Risk Category donut breakdown
+- ✅ Full supplier detail table with filtering
 
 ---
 
@@ -148,8 +150,3 @@ A pixel-perfect, executive-ready dashboard that turns spreadsheet noise into boa
 ⭐ *If this project helped you, drop a star!*
 
 </div>
-
-Save it and push:
-powershellgit add README.md
-git commit -m "Add README"
-git pushOpus 4.7
